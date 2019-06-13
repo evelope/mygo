@@ -1,7 +1,7 @@
 package main
 
 import (
-    "Clib"
+    "tanchi/Clib"
     "fmt"
     "math/rand"
     "os"
