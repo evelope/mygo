@@ -1,5 +1,5 @@
 package my
 
 func MyFunc() string {
-	return "mymymyy"
+	return "mymymyy666"
 }
