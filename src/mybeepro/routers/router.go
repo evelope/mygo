@@ -8,4 +8,9 @@ import (
 func init() {
 	beego.Router("/", &controllers.MainController{})
 	beego.Router("/posttest", &controllers.MainController{})
+	beego.Router("/deluser", &controllers.MainController{}, "delete:Deluser")
+
+	// Article 列表
+	// --------------增
+	beego.Router("/addArticle", &controllers.MainController{}, "post:AddArticle")
 }

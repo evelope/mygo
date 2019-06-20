@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
 </head>
+
 <body>
   {{.name}}
   {{.userList}}
@@ -15,10 +17,68 @@
     密码：
     <input type="text" value="" name="pwd">
     <input type="submit" value="post">
-  
+
   </form>
+
+
+  <button onclick="deluser()">删除</button>
+
+  <form action="/addArticle" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" >
+    <input type="submit" value="提交上传">
+  </form>
+
   <script>
-    console.log(999)
+    console.log(999);
+
+    const deluser = () => {
+      submitData(9)
+    }
+
+
+
+
+    // 封装好的 ajax  处理兼容问题。
+    function createXHR() {
+      if (typeof XMLHttpRequest != "undefined") {
+        return new XMLHttpRequest();
+      } else if (typeof ActiveXObject != "undefined") {
+        if (typeof arguments.callee.activeXString != "string") {
+          var versions = ["MSXML2.XMLHttp.6.0", "MSXML2.XMLHttp.3.0", "MSXML2.XMLHttp"], i, len;
+          for (i = 0, len = versions.length; i < len; i++) {
+            try {
+              new ActiveXObject(versions[i]);
+              arguments.callee.activeXString = versions[i];
+              break;
+            } catch (ex) {
+              //跳过
+            }
+          }
+        }
+        return new ActiveXObject(arguments.callee.activeXString);
+      } else {
+        throw new Error("No XHR object available.");
+      }
+    }
+
+
+    // delete
+    function submitData(id) {
+      var xhr = createXHR();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            alert(xhr.responseText);
+          } else {
+            alert("Request was unsuccessful: " + xhr.status);
+          }
+        }
+      };
+      xhr.open("delete", "/deluser", true);
+      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+      xhr.send(id); // 将表单数据序列化并发送
+    } 
   </script>
 </body>
+
 </html>
