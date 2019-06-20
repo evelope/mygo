@@ -2,6 +2,7 @@ package main
 
 import (
 	_ "mybeepro/routers"
+	_ "mybeepro/models"
 	"github.com/astaxie/beego"
 )
 
