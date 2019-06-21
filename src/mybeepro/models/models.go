@@ -23,7 +23,8 @@ type Article struct {
 	// auto_now_add  第一次保存 才 设置时间
 	Atime time.Time `orm:"auto_now"`
 	// default 默认值   null 允许为空
-	Acount int `orm:"default(0);null"`
+	// Acount int `orm:"default(0);null"`
+	Acount string
 	Acontent string
 	Aimg string
 }

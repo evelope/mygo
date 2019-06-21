@@ -24,9 +24,20 @@
   <button onclick="deluser()">删除</button>
 
   <form action="/addArticle" method="post" enctype="multipart/form-data">
-    <input type="file" name="file" >
+    <input type="file" name="file">
     <input type="submit" value="提交上传">
   </form>
+
+
+
+  <div>
+      aname<input type="text" name="aname" class="aname"><br/>
+      atime<input type="text" name="atime" class="atime"><br/>
+      acount<input type="text" name="acount" class="acount"><br/>
+      acontent<input type="text" name="acontent" class="acontent"><br/>
+      aimg<input type="text" name="aimg" class="aimg"><br/>
+    <button onclick="addArt()">新增article</button>
+  </div>
 
   <script>
     console.log(999);
@@ -35,6 +46,16 @@
       submitData(9)
     }
 
+    const addArt = () => {
+      let data = {
+        aname: document.querySelector(".aname").value,
+        // atime: document.querySelector(".atime").value,
+        acount: document.querySelector(".acount").value,
+        acontent: document.querySelector(".acontent").value,
+        aimg: document.querySelector(".aimg").value,
+      }
+      submitPost("/addArticle", data)
+    }
 
 
 
@@ -68,7 +89,7 @@
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-            alert(xhr.responseText);
+            // alert(xhr.responseText);
           } else {
             alert("Request was unsuccessful: " + xhr.status);
           }
@@ -77,7 +98,29 @@
       xhr.open("delete", "/deluser", true);
       xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
       xhr.send(id); // 将表单数据序列化并发送
-    } 
+    }
+
+
+    // post
+    function submitPost(url, data) {
+      // addArticle
+      var xhr = createXHR();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            // alert(xhr.responseText);
+          } else {
+            alert("Request was unsuccessful: " + xhr.status);
+          }
+        }
+      };
+      xhr.open("post", url, true);
+      xhr.setRequestHeader("Content-type", "application/json");
+      xhr.send(JSON.stringify(data));  //如果是对象格式的数据就要转换成jsonstring
+    }
+
+
+
   </script>
 </body>
 

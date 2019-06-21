@@ -1,11 +1,12 @@
 package controllers
 
 import (
+	"encoding/json"
 	"github.com/astaxie/beego"
 	"github.com/astaxie/beego/orm"
 	"mybeepro/models"
-	"path"
-	"time"
+	// "path"
+	// "time"
 )
 
 type MainController struct {
@@ -18,41 +19,41 @@ func (c *MainController) Get() {
 
 	//-------------------------------查
 	//1 有rom 对象
-	o := orm.NewOrm()
-	//2 有要插入的结构体对象
-	user := models.User{}
-	//3 指定字段
-	user.Id = 2
-	//4 查询
-	err := o.Read(&user)
-	if err != nil {
-		beego.Info("查询失败", err)
-		return
-	}
-	c.Data["userList"] = user
-	beego.Info("查询成功", user)
+	// o := orm.NewOrm()
+	// //2 有要插入的结构体对象
+	// user := models.User{}
+	// //3 指定字段
+	// user.Id = 2
+	// //4 查询
+	// err := o.Read(&user)
+	// if err != nil {
+	// 	beego.Info("查询失败", err)
+	// 	return
+	// }
+	// c.Data["userList"] = user
+	// beego.Info("查询成功", user)
 	// **********************************
 
 
 
 	//--------------------------------改
 	//1 有rom 对象
-	o = orm.NewOrm()
-	//2 有要插入的结构体对象
-	user = models.User{}
-	//3 指定字段
-	user.Id = 1
-	//4 查询
-	err = o.Read(&user)
-	if err == nil {
-		user.Name = "www飞"
-		//5 更新
-		_,errr := o.Update(&user)
-		if errr != nil {
-			beego.Info("更新失败", err)
-			return
-		}
-	}
+	// o = orm.NewOrm()
+	// //2 有要插入的结构体对象
+	// user = models.User{}
+	// //3 指定字段
+	// user.Id = 1
+	// //4 查询
+	// err = o.Read(&user)
+	// if err == nil {
+	// 	user.Name = "www飞"
+	// 	//5 更新
+	// 	_,errr := o.Update(&user)
+	// 	if errr != nil {
+	// 		beego.Info("更新失败", err)
+	// 		return
+	// 	}
+	// }
 	// **********************************
 
 	c.TplName = "index.html"
@@ -113,7 +114,7 @@ func (c *MainController) Deluser() {
 		//2 有要插入的结构体对象
 		user := models.User{}
 		//3 指定字段
-		user.Id = 9
+		user.Id = 5
 		//4 查询
 		_,err := o.Delete(&user)
 		if err != nil {
@@ -129,35 +130,46 @@ func (c *MainController) Deluser() {
 
 // ----------------- AddArticle
 func (c *MainController) AddArticle () {
-	// -------------- 文件上传
-	// _,h,err := c.GetFile("file")
-	f,h,err := c.GetFile("file")
-	defer f.Close()
+	// ------------------- 文件上传
+	// // _,h,err := c.GetFile("file")
+	// f,h,err := c.GetFile("file")
+	// defer f.Close()
 
-	// 1 限定格式
-	fileext := path.Ext(h.Filename)
-	beego.Info(fileext)
-	if fileext != ".png" && fileext != ".jpg" {
-		beego.Info("文件格式错误")
-		return
-	}
-	// 2 限定 大小
-	if h.Size > 50000000 {
-		beego.Info("文件太大")
-		return
-	}
+	// // 1 限定格式
+	// fileext := path.Ext(h.Filename)
+	// beego.Info(fileext)
+	// if fileext != ".png" && fileext != ".jpg" {
+	// 	beego.Info("文件格式错误")
+	// 	return
+	// }
+	// // 2 限定 大小
+	// if h.Size > 50000000 {
+	// 	beego.Info("文件太大")
+	// 	return
+	// }
 
-	// 3 需要重命名
-	filename := time.Now().Format("2006-01-02-15-04-05") + fileext
-	beego.Info( filename, "**********")
-	if err != nil {
-		beego.Info("上传失败")
-		return
-	} else {
-		beego.Info("上传成功")
-		c.SaveToFile("file", "./static/img/"+filename)
-		// c.SaveToFile("file", "./static/img/"+h.Filename)
-	}
+	// // 3 需要重命名
+	// filename := time.Now().Format("2006-01-02-15-04-05") + fileext
+	// if err != nil {
+	// 	beego.Info("上传失败")
+	// 	return
+	// } else {
+	// 	beego.Info("上传成功")
+	// 	c.SaveToFile("file", "./static/img/"+filename)
+	// }
+	// ****************************************************
 	
+
+	ob := models.Article{}
+	body := c.Ctx.Input.RequestBody
+	json.Unmarshal(body, &ob);
+	
+	o := orm.NewOrm()
+	_, err := o.Insert(&ob)
+	if err != nil {
+		beego.Info("新增失败", err)
+		return
+	}
+	beego.Info("新增成功")
 	c.TplName = "index.html"
 }
