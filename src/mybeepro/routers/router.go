@@ -13,4 +13,8 @@ func init() {
 	// Article 列表
 	// --------------增
 	beego.Router("/addArticle", &controllers.MainController{}, "post:AddArticle")
+
+
+	// --------------查
+	beego.Router("/getArticle", &controllers.MainController{}, "get:GetArticle")
 }

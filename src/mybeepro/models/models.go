@@ -38,3 +38,8 @@ func init(){
 	// 生成表 1  default 默认数据库  2 是否强制更新 重新生成表（表建错了）  3 是否可见
 	orm.RunSyncdb("default", false, true)
 }
+
+// type Data struct {
+// 	code int
+// 	data Article
+// }

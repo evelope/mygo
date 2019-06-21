@@ -173,3 +173,19 @@ func (c *MainController) AddArticle () {
 	beego.Info("新增成功")
 	c.TplName = "index.html"
 }
+
+
+// -----------GetArticle
+func (c *MainController) GetArticle() {
+	o := orm.NewOrm()
+	var atrList[]models.Article
+	_,err := o.QueryTable("Article").All(&atrList)
+	if err != nil {
+		beego.Info("查询所有失败", err)
+		return
+	}
+	beego.Info("查询成功", atrList)
+	c.Data["json"] = atrList
+	c.ServeJSON()
+	c.TplName = "index.html"
+}

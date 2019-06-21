@@ -6,6 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <style>
+    table {
+      border-collapse: collapse;
+    }
+
+    table th,
+    table td {
+      border: 1px solid #000;
+    }
+  </style>
 </head>
 
 <body>
@@ -31,19 +41,48 @@
 
 
   <div>
-      aname<input type="text" name="aname" class="aname"><br/>
-      atime<input type="text" name="atime" class="atime"><br/>
-      acount<input type="text" name="acount" class="acount"><br/>
-      acontent<input type="text" name="acontent" class="acontent"><br/>
-      aimg<input type="text" name="aimg" class="aimg"><br/>
+    aname<input type="text" name="aname" class="aname"><br />
+    atime<input type="text" name="atime" class="atime"><br />
+    acount<input type="text" name="acount" class="acount"><br />
+    acontent<input type="text" name="acontent" class="acontent"><br />
+    aimg<input type="text" name="aimg" class="aimg"><br />
     <button onclick="addArt()">新增article</button>
   </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>id</th>
+        <th>aname</th>
+        <th>atime</th>
+        <th>acount</th>
+        <th>acontent</th>
+        <th>aimg</th>
+      </tr>
+    </thead>
+
+    <tbody id="tbody">
+      <!-- {{range .atrList}}
+      <tr>
+        <td>{{.Id}}</td>
+        <td>{{.Aname}}</td>
+        <td>{{.Atime}}</td>
+        <td>{{.Acount}}</td>
+        <td>{{.Acontent}}</td>
+        <td>{{.Aimg}}</td>
+      </tr>
+      {{end}} -->
+
+      
+    </tbody>
+
+  </table>
 
   <script>
     console.log(999);
 
     const deluser = () => {
-      submitData(9)
+      submitDelete(9)
     }
 
     const addArt = () => {
@@ -54,10 +93,28 @@
         acontent: document.querySelector(".acontent").value,
         aimg: document.querySelector(".aimg").value,
       }
-      submitPost("/addArticle", data)
+      submitPost("/addArticle", data, getArt)
     }
 
 
+    // ,默认get
+    const getArt = () => {
+       submitGet(tableInit);
+    }
+
+    const tableInit = (res) => {
+      let str = "";
+      res.forEach(x=>{
+        str += "<tr>"
+        for(let key in x) {
+          str += "<td>"+x[key]+"</td>";
+        }
+        str += "</tr>"
+        tbody.innerHTML = str;
+      })
+    }
+
+    getArt();
 
     // 封装好的 ajax  处理兼容问题。
     function createXHR() {
@@ -83,8 +140,27 @@
     }
 
 
+    // get
+    function submitGet(cal) {
+      var xhr = createXHR();
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4) {
+          console.log(1111)
+          if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+            // alert(xhr.responseText);
+            // console.log(xhr.responseText)
+            cal(JSON.parse(xhr.responseText))
+          } else {
+            alert("Request was unsuccessful: " + xhr.status);
+          }
+        }
+      };
+      xhr.open("get", "/getArticle", true);
+      xhr.send(); // 将表单数据序列化并发送
+    }
+
     // delete
-    function submitData(id) {
+    function submitDelete(id) {
       var xhr = createXHR();
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
@@ -102,13 +178,14 @@
 
 
     // post
-    function submitPost(url, data) {
+    function submitPost(url, data, cal) {
       // addArticle
       var xhr = createXHR();
       xhr.onreadystatechange = function () {
         if (xhr.readyState == 4) {
           if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
             // alert(xhr.responseText);
+            cal()
           } else {
             alert("Request was unsuccessful: " + xhr.status);
           }
